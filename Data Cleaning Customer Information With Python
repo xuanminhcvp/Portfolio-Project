@@ -49,10 +49,20 @@ df['email2'] = email_arr2                                    # Add the email add
 print(df.head())
 
 # 5 Change the phone number column to the format “84..”
-df['phone'] = df['phone'].astype(str)                 
-df['phone'] = df['phone'].apply(lambda x: x if x.startswith('84') else "84"+x)  
+df['phone'] = df['phone'].astype(str)                       # Convert the 'phone' column to string type
+df['phone'] = df['phone'].apply(lambda x: x if x.startswith('84') else "84"+x)          # Add '84' prefix to phone numbers that do not already have it using lambda function and apply method, If the phone number already starts with '84', it remains unchanged
 print(df.head()) 
 
+# 6 Find any duplicated ID and remove those who join later.
+df_idDup = df[df['cust_id'].duplicated()]                    # Find any duplicated IDs
+df = df.drop_duplicates("cust_id",keep='first')              # Remove customers with duplicated IDs, keeping the first customer added to the system
+
+
+# 7 Filter those who join since 2019 and export to a csv file, delimited by “|”, file name
+df.info() 
+df_19 = df[df.join_date >=date(2019,1,1)].reset_index(drop=True)        # Create a new DataFrame that only includes customers who joined since 2019
+df_19.to_csv('emp_{}.csv'.format(date.today()), sep='|')                # Export the DataFrame to a csv file
+print(df_19.head())
 
 
 
