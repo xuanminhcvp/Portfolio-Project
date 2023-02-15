@@ -1,0 +1,58 @@
+import pandas as pd
+from datetime import datetime, date
+# Read the Excel file
+df = pd.read_excel(r'C:\Users\5400\Desktop\messy.xlsx', sheet_name='test')
+
+
+# 1 Clean the names of columns to lowercase separated by “_”, remove any empty
+df.columns
+df.columns = df.columns.str.lower()                              # Convert all column names to lowercase
+df = df.drop('unnamed: 2', axis =1)                              # Drop the column named 'unnamed: 2' from the DataFrame
+df.columns = ['cust_id','join_date','phone','full_name']         # Assign new column names to the DataFrame
+df.columns = df.columns.str.replace('$','', regex=False)
+df.columns = df.columns.str.replace(' ', '', regex=False)
+df.columns = df.columns.str.replace('%', '', regex=False)        # Remove '$', spaces and '%' characters from all column names
+print(df.head())
+
+
+# 2 Change the date column to the same format ‘YYYY-MM-DD’.
+def split_date(x):                   # This function will take a string input and return the first part of the string if it is separated by a whitespace or return None if it is not able to split.
+
+    s1 = x.split(" ")
+    if len(s1) == 2:
+        s2 = s1[0]
+        return s2
+    try:
+        return x
+    except:
+        return None
+    
+df['join_date'] = df['join_date'].apply(split_date)         # Create a new column containing only the first part of the join date for each customer.
+df['join_date'] = pd.to_datetime(df['join_date']).dt.date   # This will standardize the format of the join date column to 'YYYY-MM-DD'.
+print(df.head())
+
+
+# 3 Change the name column to the title case 
+df['full_name'] = df['full_name'].str.title()
+
+# 4 Make a new “email” column with the form: {last_name}.{first_name}.{id}@yourcompany.com
+email_arr2 = []                                             # Create an empty list to store the email addresses
+for i in range(0, len(df)):                                # Loop through each row in the DataFrame
+    split_name = df['full_name'][i].split()                # Split the full name into first and last name using whitespace as the separator
+    lst_name = split_name[0]
+    fst_name = split_name[1]
+    id1 = str(df['cust_id'][i])                              # Get the customer ID and convert it to a string
+    email = '{last_name}.{first_name}.{id}@yourcompany.com'.format(last_name = lst_name, first_name = fst_name, id =id1)      # Create the email address using the last name, first name, and customer ID
+    email_arr2.append(email)
+    
+df['email2'] = email_arr2                                    # Add the email addresses to a new column in the DataFrame
+print(df.head())
+
+# 5 Change the phone number column to the format “84..”
+df['phone'] = df['phone'].astype(str)                 
+df['phone'] = df['phone'].apply(lambda x: x if x.startswith('84') else "84"+x)  
+print(df.head()) 
+
+
+
+
