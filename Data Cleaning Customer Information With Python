@@ -1,3 +1,4 @@
+```python
 import pandas as pd
 from datetime import datetime, date
 # Read the Excel file
@@ -63,6 +64,6 @@ df.info()
 df_19 = df[df.join_date >=date(2019,1,1)].reset_index(drop=True)        # Create a new DataFrame that only includes customers who joined since 2019
 df_19.to_csv('emp_{}.csv'.format(date.today()), sep='|')                # Export the DataFrame to a csv file
 print(df_19.head())
-
+```
 
 
