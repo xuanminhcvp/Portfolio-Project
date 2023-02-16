@@ -4,7 +4,7 @@ from datetime import datetime, date
 # Read the Excel file
 df = pd.read_excel(r'C:\Users\5400\Desktop\messy.xlsx', sheet_name='test')
 
-
+```input
 # 1 Clean the names of columns to lowercase separated by “_”, remove any empty
 df.columns
 df.columns = df.columns.str.lower()                              # Convert all column names to lowercase
@@ -14,8 +14,8 @@ df.columns = df.columns.str.replace('$','', regex=False)
 df.columns = df.columns.str.replace(' ', '', regex=False)
 df.columns = df.columns.str.replace('%', '', regex=False)        # Remove '$', spaces and '%' characters from all column names
 print(df.head())
-
-
+```
+```output
 # 2 Change the date column to the same format ‘YYYY-MM-DD’.
 def split_date(x):                   # This function will take a string input and return the first part of the string if it is separated by a whitespace or return None if it is not able to split.
 
@@ -31,7 +31,7 @@ def split_date(x):                   # This function will take a string input an
 df['join_date'] = df['join_date'].apply(split_date)         # Create a new column containing only the first part of the join date for each customer.
 df['join_date'] = pd.to_datetime(df['join_date']).dt.date   # This will standardize the format of the join date column to 'YYYY-MM-DD'.
 print(df.head())
-
+```
 
 # 3 Change the name column to the title case 
 df['full_name'] = df['full_name'].str.title()
